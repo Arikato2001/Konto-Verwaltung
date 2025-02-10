@@ -1,16 +1,28 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 import java.util.*;
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        Kontoverwaltung verwaltung = new Kontoverwaltung();
+        Scanner scanner = new Scanner(System.in);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        while (true) {
+            System.out.println("\n1. Konto anlegen\n2. Einzahlen\n3. Abheben\n4. Überweisen\n5. Kontoauszug\n6. Alle Konten Anzeigen\n0. Beenden");
+            System.out.println("  - Nur Kreditkonten dürfen mit negativem Guthaben angelegt werden und Girokonten nur mit Überziehunsrahmen.");
+            System.out.println("  - Sparkonten dürfen nur mit positivem Guthaben erstellt werden.");
+            System.out.println("  - Bei Abhebungen oder Überweisungen wird der Überziehungsrahmen berücksichtigt.");
+            int auswahl = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (auswahl) {
+
+                case 1 -> verwaltung.kontoAnlegen();
+                case 2 -> verwaltung.einzahlen();
+                case 3 -> verwaltung.abheben();
+                case 4 -> verwaltung.ueberweisen();
+                case 5 -> verwaltung.kontoauszug();
+                case 6 -> verwaltung.alleKontenAnzeigen();
+                case 0 -> System.exit(0);
+                default -> System.out.println("Ungültige Auswahl!");
+            }
         }
     }
 }

@@ -1,18 +1,41 @@
 public class Sparkonto extends Konto {
-    public Sparkonto(String kontoinhaber, String kontonummer, double kontostand, double ueberziehungsrahmen) {
-        super(kontoinhaber, kontonummer, kontostand, ueberziehungsrahmen);
-    }
+    public Sparkonto(String kontoinhaber, double kontostand) {
+        if (kontostand <= 0) {
+            throw new IllegalArgumentException("Fehler: Ein Kreditkonto kann nur mit Positiven Guthaben eröffnet werden!");
+        }
 
-    public void einzahlen(double betrag) {
-        setKontostand(getKontostand() + betrag);
+        super(kontoinhaber, kontostand, 0);
     }
 
     @Override
     public void abheben(double betrag) {
-        if (getKontostand() - betrag >= 0) {
-            setKontostand(getKontostand() - betrag);
+        if (betrag > 0) {
+            double neuerKontostand = getKontostand() - betrag;
+
+            // Prüfen, ob die Abhebung den Kontostand negativ machen würde
+            if (neuerKontostand < 0) {
+                System.out.println("Abhebung abgelehnt! Nicht genug Guthaben. Maximal abhebbar: " + getKontostand() + " EUR");
+            } else {
+                setKontostand(neuerKontostand);
+                System.out.println("Abhebung erfolgreich! Neuer Kontostand: " + getKontostand() + " EUR");
+            }
+        }
+    }
+    @Override
+    public void ueberweisen(Konto empfaenger, double betrag) {
+        if (betrag > 0) {
+            double neuerKontostand = getKontostand() - betrag;
+
+            // Prüfen, ob die Überweisung den Kontostand negativ machen würde
+            if (neuerKontostand < 0) {
+                System.out.println("Überweisung abgelehnt! Nicht genug Guthaben. Maximal überweisbar: " + getKontostand() + " EUR");
+            } else {
+                setKontostand(neuerKontostand);
+                empfaenger.einzahlen(betrag);
+                System.out.println("Überweisung erfolgreich! Neuer Kontostand: " + getKontostand() + " EUR");
+            }
         } else {
-            System.out.println("dieses Betrag " + betrag + " ist auf diesem konto nicht verfügbar");
+            System.out.println("Überweisung fehlgeschlagen! Betrag muss positiv sein.");
         }
     }
 }
