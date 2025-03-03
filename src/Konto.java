@@ -4,12 +4,14 @@ public class Konto {
     private String kontoinhaber;
     private String kontonummer;
     private double kontostand;
+    private String kontotyp;
     private double ueberziehungsrahmen;
 
-    public Konto(String kontoinhaber, double kontostand, double ueberziehungsrahmen) {
+    public Konto(String kontoinhaber, double kontostand, String kontoTyp, double ueberziehungsrahmen) {
         this.kontoinhaber = kontoinhaber;
         this.kontonummer = generateRandomKontonummer();
         this.kontostand = kontostand;
+        kontotyp = kontoTyp;
         this.ueberziehungsrahmen = ueberziehungsrahmen;
         System.out.println("Konto erstellt: " + kontonummer);
     }
@@ -54,5 +56,17 @@ public class Konto {
         System.out.println("Kontoinhaber: " + kontoinhaber);
         System.out.println("Kontonummer: " + kontonummer);
         System.out.println("Kontostand: " + kontostand + " EUR");
+    }
+
+    public Object getInhaber() {
+        return kontoinhaber;
+    }
+
+    public String getKontoTyp() {
+        return kontotyp;
+    }
+
+    public double getUeberziehungsRahmen() {
+        return ueberziehungsrahmen;
     }
 }

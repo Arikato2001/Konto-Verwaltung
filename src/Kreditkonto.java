@@ -1,10 +1,10 @@
 class Kreditkonto extends Konto {
-    public Kreditkonto(String kontoinhaber, double kontostand) {
+    public Kreditkonto(String kontoinhaber, double kontostand, String kontotyp) {
         if (kontostand >= 0) {
             // mit throw machen, weil cout nicht funktioniert wenn Super nicht top statement ist
             throw new IllegalArgumentException("Fehler: Ein Kreditkonto kann nur mit negativem Guthaben eröffnet werden!");
         }
-        super(kontoinhaber, kontostand, 0);
+        super(kontoinhaber, kontostand,kontotyp, 0);
     }
 
     public void einzahlen(double betrag) {

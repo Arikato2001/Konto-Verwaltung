@@ -1,10 +1,10 @@
 public class Sparkonto extends Konto {
-    public Sparkonto(String kontoinhaber, double kontostand) {
+    public Sparkonto(String kontoinhaber, double kontostand, String kontotyp) {
         if (kontostand <= 0) {
             throw new IllegalArgumentException("Fehler: Ein Kreditkonto kann nur mit Positiven Guthaben eröffnet werden!");
         }
 
-        super(kontoinhaber, kontostand, 0);
+        super(kontoinhaber, kontostand,kontotyp, 0);
     }
 
     @Override
