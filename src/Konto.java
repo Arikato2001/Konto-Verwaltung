@@ -3,7 +3,7 @@ import java.util.Random;
 public class Konto {
     private String kontoinhaber;
     private String kontonummer;
-    private double kontostand;
+    public  double kontostand;
     private String kontotyp;
     private double ueberziehungsrahmen;
 
@@ -58,7 +58,7 @@ public class Konto {
         System.out.println("Kontostand: " + kontostand + " EUR");
     }
 
-    public Object getInhaber() {
+    public String getInhaber() {
         return kontoinhaber;
     }
 

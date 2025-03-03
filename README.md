@@ -5,7 +5,10 @@ Klasse: 2b APC
 
 # Beschreibung
 
+
 Dieses Java-Programm ermöglicht die Verwaltung verschiedener Kontoarten (Girokonto, Sparkonto und Kreditkonto) mit grundlegenden Bankfunktionen wie Einzahlung, Abhebung und Überweisung.
+
+Aktualisierung: Möglichkeit geben Operationen in GUI auszuführen 
 
 ## Installation
 

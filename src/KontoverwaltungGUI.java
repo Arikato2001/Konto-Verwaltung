@@ -78,8 +78,6 @@ public class KontoverwaltungGUI extends JFrame {
         kontoAnzeigen();
     }
 
-
-
     private void kontoAnzeigen() {
         String inhaber = (String) inhaberDropdown.getSelectedItem();
         for (Konto k : konten) {
@@ -94,7 +92,6 @@ public class KontoverwaltungGUI extends JFrame {
         }
     }
 
-
     private void einzahlen() {
         try {
             double betrag = Double.parseDouble(betragEinzahlen.getText().trim());
@@ -103,15 +100,19 @@ public class KontoverwaltungGUI extends JFrame {
             String inhaber = (String) inhaberDropdown.getSelectedItem();
             for (Konto k : konten) {
                 if (k.getInhaber().equals(inhaber)) {
-                    k.einzahlen(betrag);
+                    k.einzahlen(betrag); // Die Konto-Klasse prüft die Regeln!
                     kontoAnzeigen();
+                    JOptionPane.showMessageDialog(this, "Einzahlung erfolgreich!", "Info", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ungültige Eingabe für Betrag!");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ungültige Eingabe für Betrag!", "Fehler", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void abheben() {
         try {
@@ -132,8 +133,75 @@ public class KontoverwaltungGUI extends JFrame {
     }
 
     private void ueberweisen() {
-        JOptionPane.showMessageDialog(this, "Überweisungs-Funktion noch nicht implementiert!");
+        try {
+            double betrag = Double.parseDouble(betragUeberweisen.getText().trim());
+            if (betrag <= 0) throw new IllegalArgumentException("Betrag muss positiv sein!");
+
+            String senderInhaber = (String) inhaberDropdown.getSelectedItem();
+            if (senderInhaber == null) {
+                JOptionPane.showMessageDialog(this, "Kein Sender-Konto ausgewählt!", "Fehler", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Dropdown für Empfänger anzeigen
+            String empfaengerInhaber = zeigeEmpfaengerDropdown(senderInhaber);
+            if (empfaengerInhaber == null) {
+                return; // Falls der Benutzer abbricht, passiert nichts
+            }
+            Konto sender = null, empfaenger = null;
+            for (Konto k : konten) {
+                if (k.getInhaber().equals(senderInhaber)) {
+                    sender = k;
+                }
+                if (k.getInhaber().equals(empfaengerInhaber)) {
+                    empfaenger = k;
+                }
+            }
+            if (sender == null || empfaenger == null) {
+                JOptionPane.showMessageDialog(this, "Fehler: Konten nicht gefunden!", "Fehler", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Überweisung durchführen
+            try {
+                sender.ueberweisen(empfaenger, betrag);
+                kontoAnzeigen();
+                JOptionPane.showMessageDialog(this, "Überweisung erfolgreich!", "Info", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ungültige Eingabe für Betrag!", "Fehler", JOptionPane.ERROR_MESSAGE);
+        }
     }
+
+    private String zeigeEmpfaengerDropdown(String senderInhaber) {
+        // Liste der Empfänger erstellen (alle außer dem Sender selbst)
+        List<String> empfaengerListe = new ArrayList<>();
+        for (Konto k : konten) {
+            if (!k.getInhaber().equals(senderInhaber)) {
+                empfaengerListe.add(k.getInhaber());
+            }
+        }
+
+        if (empfaengerListe.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Es gibt keine anderen Konten für eine Überweisung!", "Fehler", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        // Dropdown für den Empfänger erstellen
+        String empfaenger = (String) JOptionPane.showInputDialog(
+                this,
+                "Empfänger wählen:",
+                "Überweisung",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                empfaengerListe.toArray(),
+                empfaengerListe.get(0) // Standardmäßig erstes Konto auswählen
+        );
+
+        return empfaenger; // Rückgabe des gewählten Empfängers (oder null, falls abgebrochen)
+    }
+
 
     public static void main(String[] args) {
         new KontoverwaltungGUI();
